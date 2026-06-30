@@ -16,6 +16,12 @@ A full stack blogging platform where users can register, write, and manage their
 
 ---
 
+## Live Demo
+
+[https://blogden.onrender.com](https://blogden.onrender.com)
+
+---
+
 ## Tech Stack
 
 | Layer | Technology |
@@ -119,9 +125,3 @@ The app is deployed on [Render](https://render.com) with two separate web servic
 
 - **API Service** — `node index.js`
 - **Frontend Service** — `node server.js` with `API_URL` env variable pointing to the deployed API
-
----
-
-## Live Demo
-
-[https://blogden.onrender.com](https://blogden.onrender.com)
