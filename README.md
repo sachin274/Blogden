@@ -117,11 +117,3 @@ Visit `http://localhost:3000`
 | PATCH | `/posts/:id` | Protected + Owner | Update a post |
 | DELETE | `/posts/:id` | Protected + Owner | Delete a post |
 
----
-
-## Deployment
-
-The app is deployed on [Render](https://render.com) with two separate web services pointing to the same Neon database.
-
-- **API Service** — `node index.js`
-- **Frontend Service** — `node server.js` with `API_URL` env variable pointing to the deployed API
