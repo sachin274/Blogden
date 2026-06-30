@@ -1,38 +1,85 @@
-l<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blog</title>
+  <title>Blogden</title>
   <link rel="stylesheet" href="/styles/main.css">
-  <!-- <script src="https://unpkg.com/axios/dist/axios.min.js"></script> -->
 </head>
-
 <body>
   <div class="container">
-    <h1>My Blog</h1>
-    <a id="newPostBtn" href="/new">New Post</a>
+    <div class="header">
+      <h1>Blogden</h1>
+      <div class="header-actions" id="headerActions">
+        <!-- filled by JS -->
+      </div>
+    </div>
+
     <ul id="postsList">
-      <% posts.forEach(post=> { %>
-        <li>
-          <h2>
-            <%=post.title%>
-          </h2>
-          <small>
-            <%=post.date %>
-          </small>
-          <p>
-            <%=post.content%>
-          </p>
-          <small>By: <%=post.author%> </small>
-          <a class="edit" href="/edit/<%= post.id %>">Edit</a>
-          <a class="delete" href="/api/posts/delete/<%= post.id %>">Delete</a>
+      <% posts.forEach(post => { %>
+        <li data-user-id="<%= post.user_id %>">
+          <a class="post-title-link" href="/posts/<%= post.id %>">
+            <h2><%= post.title %></h2>
+          </a>
+          <div class="post-meta-row">
+            <small><%= new Date(post.date).toDateString() %> &nbsp;·&nbsp; By: <%= post.author %></small>
+            <% if (post.topic) { %>
+              <span class="topic-tag topic-<%= post.topic.toLowerCase() %>"><%= post.topic %></span>
+            <% } %>
+          </div>
+          <p><%= post.content.length > 160 ? post.content.substring(0, 160) + '...' : post.content %></p>
+          <a class="read-more" href="/posts/<%= post.id %>">Read more ...</a>
+          <div class="post-actions" id="actions-<%= post.id %>" style="display:none;">
+            <a class="edit" href="/edit/<%= post.id %>">Edit</a>
+            <a class="delete" href="/api/posts/delete/<%= post.id %>">Delete</a>
+          </div>
         </li>
-        <% }); %>
+      <% }); %>
     </ul>
   </div>
 
-</body>
+  <script>
+    const token = localStorage.getItem("token");
+    const username = localStorage.getItem("username");
+    const userId = parseInt(localStorage.getItem("userId"));
 
+    const headerActions = document.getElementById("headerActions");
+
+    if (token && username) {
+      headerActions.innerHTML = `
+        <span class="welcome">Welcome, <strong>${username}</strong></span>
+        <a id="newPostBtn" href="/new">New Post</a>
+        <a id="logoutBtn" href="/logout">Logout</a>
+      `;
+
+      // Show edit/delete only on posts owned by the logged-in user
+      document.querySelectorAll("#postsList li").forEach(li => {
+        const postUserId = parseInt(li.dataset.userId);
+        const postId = li.querySelector(".post-actions")?.id?.replace("actions-", "");
+        if (postUserId === userId && postId) {
+          const actionsDiv = document.getElementById(`actions-${postId}`);
+          actionsDiv.style.display = "flex";
+          actionsDiv.querySelector(".edit").href = `/edit/${postId}`;
+          actionsDiv.querySelector(".delete").href = `/api/posts/delete/${postId}?token=${token}`;
+        }
+      });
+    } else {
+      headerActions.innerHTML = `
+        <a id="loginBtn" href="/login">Login</a>
+        <a id="registerBtn" href="/register">Register</a>
+      `;
+    }
+
+    // Save token from URL if present (after login/register redirect)
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("token")) {
+      localStorage.setItem("token", params.get("token"));
+      localStorage.setItem("username", params.get("username"));
+      localStorage.setItem("userId", params.get("userId"));
+      // Clean URL
+      window.history.replaceState({}, document.title, "/");
+      location.reload();
+    }
+  </script>
+</body>
 </html>

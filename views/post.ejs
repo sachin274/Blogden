@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= post.title %> — Blogden</title>
+  <link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+  <div class="container post-container">
+    <a class="back-link" href="/">← Back to Blogden</a>
+
+    <div class="post-header">
+      <h1><%= post.title %></h1>
+      <div class="post-meta">
+        <span><%= new Date(post.date).toDateString() %></span>
+        <span class="dot">·</span>
+        <span>By <strong><%= post.author %></strong></span>
+        <% if (post.topic) { %>
+          <span class="topic-tag topic-<%= post.topic.toLowerCase() %>"><%= post.topic %></span>
+        <% } %>
+      </div>
+    </div>
+
+    <div class="post-body">
+      <p><%= post.content %></p>
+    </div>
+  </div>
+
+  <script>
+    // inject edit/delete if user owns this post
+    const token = localStorage.getItem("token");
+    const userId = parseInt(localStorage.getItem("userId"));
+    const postUserId = <%= post.user_id %>;
+
+    if (token && userId === postUserId) {
+      const actionsHtml = `
+        <div class="post-actions owner-actions">
+          <a class="edit" href="/edit/<%= post.id %>">Edit</a>
+          <a class="delete" href="/api/posts/delete/<%= post.id %>?token=${token}">Delete</a>
+        </div>
+      `;
+      document.querySelector(".post-header").insertAdjacentHTML("afterend", actionsHtml);
+    }
+  </script>
+</body>
+</html>

@@ -1,40 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Edit Blog</title>
+  <title><%= heading %> — Blogden</title>
   <link rel="stylesheet" href="/styles/main.css">
 </head>
-
 <body>
   <div class="container">
-    <h1>
-      <%= heading %>
-    </h1>
+    <h1><%= heading %></h1>
 
-    <% if (locals.post) { %>
-      <form id="editForm" method="post" action="/api/posts/<%=post.id%>">
-        <input type="text" name="title" value="<%=post.title %>">
-        <textarea name="content" rows="10"><%=post.content %></textarea>
-        <input type="text" name="author" value="<%=post.author %>">
-        <button class="full-width" type="submit">
-          <%= submit %>
-        </button>
+    <% if (post) { %>
+      <form method="post" action="/api/posts/<%= post.id %>">
+        <input type="hidden" name="token" id="tokenField">
+        <input type="text" name="title" value="<%= post.title %>" required>
+        <textarea name="content" rows="10" required><%= post.content %></textarea>
+        <select name="topic">
+          <option value="Technology"    <%= post.topic === 'Technology'    ? 'selected' : '' %>>Technology</option>
+          <option value="Science"       <%= post.topic === 'Science'       ? 'selected' : '' %>>Science</option>
+          <option value="Health"        <%= post.topic === 'Health'        ? 'selected' : '' %>>Health</option>
+          <option value="Finance"       <%= post.topic === 'Finance'       ? 'selected' : '' %>>Finance</option>
+          <option value="Lifestyle"     <%= post.topic === 'Lifestyle'     ? 'selected' : '' %>>Lifestyle</option>
+          <option value="Environment"   <%= post.topic === 'Environment'   ? 'selected' : '' %>>Environment</option>
+          <option value="Business"      <%= post.topic === 'Business'      ? 'selected' : '' %>>Business</option>
+          <option value="General"       <%= post.topic === 'General'       ? 'selected' : '' %>>General</option>
+        </select>
+        <button class="full-width" type="submit"><%= submit %></button>
       </form>
-      <% } else {%>
-        <form id="newPostForm" method="post" action="/api/posts">
-          <input type="text" name="title" placeholder="Title" required>
-          <textarea name="content" placeholder="Content" required rows="10"></textarea>
-          <input type="text" name="author" placeholder="Author" required>
-          <button class="full-width" type="submit">
-            <%= submit %>
-          </button>
-        </form>
-        <% } %>
+    <% } else { %>
+      <form method="post" action="/api/posts">
+        <input type="hidden" name="token" id="tokenField">
+        <input type="text" name="title" placeholder="Title" required>
+        <textarea name="content" placeholder="Content" required rows="10"></textarea>
+        <select name="topic">
+          <option value="Technology">Technology</option>
+          <option value="Science">Science</option>
+          <option value="Health">Health</option>
+          <option value="Finance">Finance</option>
+          <option value="Lifestyle">Lifestyle</option>
+          <option value="Environment">Environment</option>
+          <option value="Business">Business</option>
+          <option value="General">General</option>
+        </select>
+        <button class="full-width" type="submit"><%= submit %></button>
+      </form>
+    <% } %>
 
+    <a class="back-link" href="/">← Back to posts</a>
   </div>
-</body>
 
+  <script>
+    const token = localStorage.getItem("token");
+    if (!token) {
+      window.location.href = "/login";
+    } else {
+      document.getElementById("tokenField").value = token;
+    }
+  </script>
+</body>
 </html>

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Logging out — Blogden</title>
+</head>
+<body>
+  <script>
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    localStorage.removeItem("userId");
+    window.location.href = "/";
+  </script>
+</body>
+</html>

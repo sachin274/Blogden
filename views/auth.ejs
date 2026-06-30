@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= heading %></title>
+  <link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+  <div class="container auth-container">
+    <h1><%= heading %></h1>
+
+    <% if (error) { %>
+      <p class="error-msg"><%= error %></p>
+    <% } %>
+
+    <form method="post" action="<%= action %>">
+      <% if (action === '/register') { %>
+        <input type="text" name="username" placeholder="Username" required>
+      <% } %>
+      <input type="email" name="email" placeholder="Email" required>
+      <input type="password" name="password" placeholder="Password" required>
+      <button class="full-width" type="submit"><%= heading %></button>
+    </form>
+
+    <% if (action === '/login') { %>
+      <p class="switch-link">Don't have an account? <a href="/register">Register</a></p>
+    <% } else { %>
+      <p class="switch-link">Already have an account? <a href="/login">Login</a></p>
+    <% } %>
+  </div>
+</body>
+</html>
