@@ -122,6 +122,6 @@ The app is deployed on [Render](https://render.com) with two separate web servic
 
 ---
 
-## License
+## Live Demo
 
-MIT
+[https://blogden.onrender.com](https://blogden.onrender.com)
